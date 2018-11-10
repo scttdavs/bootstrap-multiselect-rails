@@ -124,37 +124,6 @@
         })
     }
 
-    // Object.assign polyfill
-    if (typeof Object.assign != 'function') {
-        // Must be writable: true, enumerable: false, configurable: true
-        Object.defineProperty(Object, "assign", {
-            value: function assign(target, varArgs) { // .length of function is 2
-                'use strict';
-                if (target == null) { // TypeError if undefined or null
-                    throw new TypeError('Cannot convert undefined or null to object');
-                }
-
-                var to = Object(target);
-
-                for (var index = 1; index < arguments.length; index++) {
-                    var nextSource = arguments[index];
-
-                    if (nextSource != null) { // Skip over if undefined or null
-                        for (var nextKey in nextSource) {
-                            // Avoid bugs when hasOwnProperty is shadowed
-                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                                to[nextKey] = nextSource[nextKey];
-                            }
-                        }
-                    }
-                }
-                return to;
-            },
-            writable: true,
-            configurable: true
-        });
-    }
-
     function insertAfter(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
@@ -287,7 +256,7 @@
     /**
      * Constructor to create a new multiselect using the given select.
      *
-     * @param {jQuery} select
+     * @param {Node} select
      * @param {Object} options
      * @returns {Multiselect}
      */
@@ -310,7 +279,9 @@
             })
         }
 
-        this.options = this.mergeOptions(Object.assign({}, options, dataAttributes));
+        this.options = this.mergeOptions(deepmerge.all([{}, options || {}, dataAttributes]));
+
+        console.log("OPTS", options, this.options)
 
         // Initialization.
         this.query = '';
@@ -353,8 +324,8 @@
              * option is selected or a list of the selected options up to a length
              * of 3 selected options.
              *
-             * @param {jQuery} options
-             * @param {jQuery} select
+             * @param {Node} options
+             * @param {Node} select
              * @returns {String}
              */
             buttonText: function (options, select) {
@@ -392,8 +363,8 @@
             /**
              * Updates the title of the button similar to the buttonText function.
              *
-             * @param {jQuery} options
-             * @param {jQuery} select
+             * @param {Node} options
+             * @param {Node} select
              * @returns {@exp;selected@call;substr}
              */
             buttonTitle: function (options, select) {
@@ -413,7 +384,7 @@
             /**
              * Create a label.
              *
-             * @param {jQuery} element
+             * @param {Node} element
              * @returns {String}
              */
             optionLabel: function (element) {
@@ -422,7 +393,7 @@
             /**
              * Create a class.
              *
-             * @param {jQuery} element
+             * @param {Node} element
              * @returns {String}
              */
             optionClass: function (element) {
@@ -433,7 +404,7 @@
              *
              * Not triggered when selecting/deselecting options manually.
              *
-             * @param {jQuery} option
+             * @param {Node} option
              * @param {Boolean} checked
              */
             onChange: function (option, checked) {
@@ -442,7 +413,7 @@
             /**
              * Triggered when the dropdown is shown.
              *
-             * @param {jQuery} event
+             * @param {Node} event
              */
             onDropdownShow: function (event) {
 
@@ -450,7 +421,7 @@
             /**
              * Triggered when the dropdown is hidden.
              *
-             * @param {jQuery} event
+             * @param {NodeIterator
              */
             onDropdownHide: function (event) {
 
@@ -458,7 +429,7 @@
             /**
              * Triggered after the dropdown is shown.
              *
-             * @param {jQuery} event
+             * @param {Node} event
              */
             onDropdownShown: function (event) {
 
@@ -466,7 +437,7 @@
             /**
              * Triggered after the dropdown is hidden.
              *
-             * @param {jQuery} event
+             * @param {Node} event
              */
             onDropdownHidden: function (event) {
 
@@ -480,10 +451,10 @@
             /**
              * Triggered after initializing.
              *
-             * @param {jQuery} $select
-             * @param {jQuery} $container
+             * @param {Node} select
+             * @param {Node} container
              */
-            onInitialized: function ($select, $container) {
+            onInitialized: function (select, container) {
 
             },
             enableHTML: false,
@@ -550,8 +521,10 @@
          * Builds the button of the multiselect.
          */
         buildButton: function () {
+            console.log("BUTTON", this.options.templates.button);
             var button = createElement(this.options.templates.button);
             this.button = button;
+            console.log("BUTTON 2", this.button);
             this.options.buttonClass.split(' ').forEach(function (c) {
                 addClass(this.button, c);
             }.bind(this));
@@ -571,7 +544,7 @@
                 this.button.style.width = 'hidden';
                 this.button.style.textOverflow = 'ellipsis';
 
-                this.$container.style.width = this.options.buttonWidth;
+                this.container.style.width = this.options.buttonWidth;
             }
 
             // Keep the tab index from the select.
@@ -1015,7 +988,7 @@
         /**
          * Create an option using the given select option.
          *
-         * @param {jQuery} element
+         * @param {Node} element
          */
         createOptionValue: function (element) {
             // Support the label attribute on options.
@@ -1074,7 +1047,7 @@
         /**
          * Creates a divider using the given select option.
          *
-         * @param {jQuery} element
+         * @param {Node} element
          */
         createDivider: function (element) {
             var divider = createElement(this.options.templates.divider);
@@ -1084,7 +1057,7 @@
         /**
          * Creates an optgroup.
          *
-         * @param {jQuery} group
+         * @param {Node} group
          */
         createOptgroup: function (group) {
             if (this.options.enableCollapsibleOptGroups && this.options.multiple) {
@@ -1144,7 +1117,7 @@
             var alreadyHasSelectAll = this.hasSelectAll();
 
             if (!alreadyHasSelectAll && this.options.includeSelectAllOption && this.options.multiple &&
-                $('option', this.$select).length > this.options.includeSelectAllIfMoreThan) {
+                this.select.getElementsByTagName('option').length > this.options.includeSelectAllIfMoreThan) {
 
                 // Check whether to add a divider after the select all.
                 if (this.options.includeSelectAllDivider) {
@@ -1690,7 +1663,7 @@
          * @returns {Array}
          */
         mergeOptions: function (options) {
-            return deepmerge({}, this.defaults, this.options, options);
+            return deepmerge.all([{}, this.defaults || {}, this.options || {}, options || {}]);
         },
 
         /**
@@ -1789,7 +1762,7 @@
          * Gets a select option by its value.
          *
          * @param {String} value
-         * @returns {jQuery}
+         * @returns {Node}
          */
         getOptionByValue: function (value) {
             var options = this.select.getElementsByTagName('option');
@@ -1807,7 +1780,7 @@
          * Get the input (radio/checkbox) by its value.
          *
          * @param {String} value
-         * @returns {jQuery}
+         * @returns {Node}
          */
         getInputByValue: function (value) {
             var checkboxes = this.ul.querySelectorAll('li input');
