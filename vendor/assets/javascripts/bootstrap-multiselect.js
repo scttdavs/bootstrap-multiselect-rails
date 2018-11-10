@@ -359,7 +359,7 @@
              */
             buttonText: function (options, select) {
                 if (this.disabledText.length > 0 &&
-                    (this.disableIfEmpty || select.getAttribute('disabled') !== undefined) &&
+                    (this.disableIfEmpty || select.getAttribute('disabled')) &&
                     options.length == 0) {
 
                     return this.disabledText;
@@ -382,7 +382,7 @@
                     var delimiter = this.delimiterText;
 
                     toArray(options).forEach(function (option) {
-                        var label = (option.getAttribute('label') !== undefined) ? option.getAttribute('label') : option.textContent;
+                        var label = (option.getAttribute('label')) ? option.getAttribute('label') : option.textContent;
                         selected += label + delimiter;
                     });
 
@@ -404,7 +404,7 @@
                     var delimiter = this.delimiterText;
 
                     toArray(options).forEach(function (option) {
-                        var label = (option.getAttribute('label') !== undefined) ? option.getAttribute('label') : option.textContent;
+                        var label = option.getAttribute('label') ? option.getAttribute('label') : option.textContent;
                         selected += label + delimiter;
                     });
                     return selected.substr(0, selected.length - 2);
@@ -559,7 +559,7 @@
                 addClass(this.button, this.select.getAttribute('class'));
             }
             // Adopt active state.
-            if (this.select.getAttribute('disabled') !== undefined) {
+            if (this.select.getAttribute('disabled')) {
                 this.disable();
             } else {
                 this.enable();
@@ -1768,6 +1768,8 @@
 
             // Now update the title attribute of the button.
             toArray(this.container.querySelectorAll('.multiselect')).forEach(function (el) {
+                console.log("OPTIONS", options)
+                console.log("TITLE", this.options.buttonTitle(options, this.select))
                 el.setAttribute('title', this.options.buttonTitle(options, this.select))
             }.bind(this))
         },
