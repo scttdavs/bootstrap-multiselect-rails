@@ -552,7 +552,9 @@
         buildButton: function () {
             var button = createElement(this.options.templates.button);
             this.button = button;
-            addClass(this.button, this.options.buttonClass);
+            this.options.buttonClass.split(' ').forEach(function (c) {
+                addClass(this.button, c);
+            }.bind(this));
             if (this.select.getAttribute('class') && this.options.inheritClass) {
                 addClass(this.button, this.select.getAttribute('class'));
             }
@@ -634,8 +636,7 @@
                 if (tag === 'optgroup') {
                     this.createOptgroup(element);
                 } else if (tag === 'option') {
-
-                    if (element.setAttribute('data-role') === 'divider') {
+                    if (element.getAttribute('data-role') === 'divider') {
                         this.createDivider();
                     } else {
                         this.createOptionValue(element);
@@ -732,7 +733,7 @@
                 if (this.options.preventInputChangeEvent) {
                     return false;
                 }
-            }.bing(this));
+            }.bind(this));
 
             this.ul.addEventListener('mousedown', function (e) {
                 if (e.target.tagName.toLowerCase() !== 'a') return;
@@ -810,7 +811,7 @@
 
                     target.blur();
                 }.bind(that))
-            });
+            }.bind(this));
 
             // Keyboard support.
             this.container.addEventListener('keydown.multiselect', function (event) {
@@ -1025,24 +1026,23 @@
             var inputType = this.options.multiple ? "checkbox" : "radio";
 
             var li = createElement(this.options.templates.li);
-            var label = toArray(li.getElementsByTagName('label'));
-            label.forEach(function (l) {
-                addClass(l, inputType);
-            });
+            var labelEL = toArray(li.getElementsByTagName('label'))[0];
+            addClass(labelEL, inputType);
             addClass(li, classes);
 
             if (this.options.enableHTML) {
-                label.innerHTML = " " + label;
+                labelEL.innerHTML = " " + label;
             } else {
-                label.textContent = " " + label;
+                labelEL.textContent = " " + label;
             }
 
-            var checkbox = createElement('<input/>').setAttribute('type', inputType);
+            var checkbox = createElement('<input/>');
+            checkbox.setAttribute('type', inputType);
 
             if (this.options.checkboxName) {
                 checkbox.setAttribute('name', this.options.checkboxName);
             }
-            label.insertBefore(checkbox, label.firstChild);
+            labelEL.insertBefore(checkbox, labelEL.firstChild);
 
             var selected = element.selected || false;
             checkbox.value = value;
@@ -1052,7 +1052,7 @@
                 addClass(checkbox.parentNode.parentNode, 'multiselect-all');
             }
 
-            label.setAttribute('title', element.getAttribute('title'));
+            labelEL.setAttribute('title', element.getAttribute('title'));
 
             this.ul.appendChild(li);
 
@@ -1833,13 +1833,14 @@
         }
     };
 
-    var multiselect = function (el, option, parameter, extraOptions) {
+    var multiselect = window.multiselect = function (el, option, parameter, extraOptions) {
+        if (!el) return;
         var data = el.getAttribute('data-multiselect');
         var options = typeof option === 'object' && option;
 
         // Initialize the multiselect.
         if (!data) {
-            data = new Multiselect(this, options);
+            data = new Multiselect(el, options);
             el.setAttribute('data-multiselect', data);
         }
 
