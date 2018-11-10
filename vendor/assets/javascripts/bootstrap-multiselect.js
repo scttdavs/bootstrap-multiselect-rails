@@ -696,7 +696,7 @@
                                 checkboxesNotThis.forEach(function (c) {
                                     var li = getNearest(c, 'li');
                                     removeClass(li, this.options.selectedClass);
-                                });
+                                }.bind(this));
                             }
 
                             checkboxesNotThis.forEach(function (c) {
@@ -741,7 +741,6 @@
                 if (e.shiftKey) return false; // Prevent selecting text by Shift+click
             });
 
-            var that = this;
             ['touchstart', 'click'].forEach(function (eventName) {
                 this.ul.addEventListener(eventName, function (event) {
                     event.stopPropagation();
@@ -810,7 +809,7 @@
                     }
 
                     target.blur();
-                }.bind(that))
+                }.bind(this))
             }.bind(this));
 
             // Keyboard support.
@@ -1297,7 +1296,7 @@
                                 this.updateSelectAll();
                             }.bind(this), 300, this);
                         }.bind(this));
-                    });
+                    }.bind(this));
                 }
             }
         },
@@ -1557,7 +1556,7 @@
                         return !hasClass(li, "disabled") && !hasClass("divider") && isVisible(li);
                     }).forEach(function (li) {
                         removeClass(li, this.options.selectedClass);
-                    });
+                    }.bind(this));
                 }
             } else {
                 toArray(this.ul.querySelectorAll("li input[type='checkbox']")).filter(function (cb) {
@@ -1577,7 +1576,7 @@
                         return !hasClass("divider") && !hasClass("disabled");
                     }).forEach(function (li) {
                         removeClass(li, this.options.selectedClass);
-                    });
+                    }.bind(this));
                 }
             }
         },
@@ -1732,7 +1731,7 @@
                     });
                     selectAllLi.forEach(function (li) {
                         addClass(li, this.options.selectedClass);
-                    });
+                    }.bind(this));
                     this.options.onSelectAll(true);
                 } else {
                     selectAllInput.forEach(function (i) {
@@ -1740,7 +1739,7 @@
                     });
                     selectAllLi.forEach(function (li) {
                         removeClass(li, this.options.selectedClass);
-                    });
+                    }.bind(this));
                     if (checkedBoxesLength === 0) {
                         if (!notTriggerOnSelectAll) {
                             this.options.onSelectAll(false);
@@ -1841,7 +1840,7 @@
         // Initialize the multiselect.
         if (!data) {
             data = new Multiselect(el, options);
-            el.setAttribute('data-multiselect', data);
+            el.setAttribute('data-multiselect', JSON.stringify(data));
         }
 
         // Call multiselect method.
@@ -1852,6 +1851,8 @@
                 el.setAttribute('data-multiselect', false);
             }
         }
+
+        console.log(el);
     };
 
     var ready = function () {
