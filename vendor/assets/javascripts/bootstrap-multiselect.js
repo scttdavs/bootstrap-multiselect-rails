@@ -1754,7 +1754,7 @@
          */
         getSelected: function () {
             return toArray(this.select.getElementsByTagName('option')).filter(function (o) {
-                return o.selected = true;
+                return o.selected === true;
             });
         },
 
