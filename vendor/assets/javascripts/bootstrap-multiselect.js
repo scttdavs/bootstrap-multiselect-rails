@@ -688,7 +688,7 @@
                         if (this.options.selectedClass === "active") {
                             optionsNotThis.forEach(function (o) {
                                 var a = getNearest(o, 'a');
-                                a.style.outline = "";
+                                if (a) a.style.outline = "";
                             });
                         }
                     } else {
