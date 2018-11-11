@@ -625,6 +625,7 @@
             this.ul.addEventListener('change', function (event) {
                 if (event.target.tagName.toLowerCase() !== 'input') return false;
 
+                var target = event.target;
                 var checked = target.checked || false;
                 var isSelectAllOption = target.value === this.options.selectAllValue;
 
