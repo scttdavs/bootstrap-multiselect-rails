@@ -281,8 +281,6 @@
 
         this.options = this.mergeOptions(deepmerge.all([{}, options || {}, dataAttributes]));
 
-        console.log("OPTS", options, this.options)
-
         // Initialization.
         this.query = '';
         this.searchTimeout = null;
@@ -522,10 +520,8 @@
          * Builds the button of the multiselect.
          */
         buildButton: function () {
-            console.log("BUTTON", this.options.templates.button);
             var button = createElement(this.options.templates.button);
             this.button = button;
-            console.log("BUTTON 2", this.button);
             this.options.buttonClass.split(' ').forEach(function (c) {
                 addClass(this.button, c);
             }.bind(this));
@@ -1743,8 +1739,6 @@
 
             // Now update the title attribute of the button.
             toArray(this.container.querySelectorAll('.multiselect')).forEach(function (el) {
-                console.log("OPTIONS", options)
-                console.log("TITLE", this.options.buttonTitle(options, this.select))
                 el.setAttribute('title', this.options.buttonTitle(options, this.select))
             }.bind(this))
         },
@@ -1828,8 +1822,6 @@
                 el.setAttribute('data-multiselect', false);
             }
         }
-
-        console.log(el);
     };
 
     var ready = function () {
