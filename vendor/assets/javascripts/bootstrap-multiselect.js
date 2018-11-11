@@ -1028,6 +1028,7 @@
 
             if (element.disabled) {
                 checkbox.setAttribute('disabled', 'disabled');
+                checkbox.disabled = true;
                 var a = getNearest(checkbox, 'a');
                 a.setAttribute('tabindex', "-1");
 
