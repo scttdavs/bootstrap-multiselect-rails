@@ -313,6 +313,7 @@
 
         this.select.style.display = "none";
         insertAfter(this.container, this.select);
+        BSN.initCallback(this.container);
         this.options.onInitialized(this.select, this.container);
     }
 
