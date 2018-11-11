@@ -656,11 +656,11 @@
                     }
                 } else {
                     if (checked) {
-                        option.setAttribute('selected', true);
+                        option.selected = true;
 
                         if (this.options.multiple) {
                             // Simply select additional option.
-                            option.setAttribute('selected', true);
+                            option.selected = true;
                         } else {
                             // Unselect all other options and corresponding checkboxes.
                             if (this.options.selectedClass) {
@@ -674,7 +674,7 @@
                                 c.checked = false;
                             });
                             optionsNotThis.forEach(function (o) {
-                                o.setAttribute('selected', false);
+                                o.selected = false;
                             });
 
                             // It's a single selection, so close.
@@ -689,7 +689,7 @@
                         }
                     } else {
                         // Unselect option.
-                        option.setAttribute('selected', false);
+                        option.selected = false;
                     }
 
                     // To prevent select all from firing onChange: #575
@@ -766,7 +766,7 @@
 
                                 var option = this.getOptionByValue(checkbox.value);
 
-                                option.setAttribute('selected', checked);
+                                option.selected = checked;
                             }
                         }
 
